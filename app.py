@@ -33,12 +33,12 @@ def process_update():
 
         print(request.args['del'])
 
-        if request.args['del']:
+        if request.args['del'] is True:
             print('deleting unresponsed_queries')
             with open("unresponsed_queries.json", 'w') as js:
                 js.write(json.dumps({}))
                 
-        if request.args['urq']:
+        if request.args['urq'] is True:
             print('returning unresponsed_queries content')
             return jsonify(unresponsed_queries)
 
