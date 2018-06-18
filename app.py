@@ -31,6 +31,8 @@ def process_update():
         with open("unresponsed_queries.json") as js:
             unresponsed_queries = json.load(js)
 
+        print(request.args['del'])
+
         if request.args['del']:
             print('deleting unresponsed_queries')
             with open("unresponsed_queries.json", 'w') as js:
