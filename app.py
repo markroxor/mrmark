@@ -1,6 +1,7 @@
 import requests
 from flask import Flask, request, jsonify
 import json
+import os
 
 app = Flask(__name__)
 
@@ -26,8 +27,17 @@ def process_update():
         
     if request.method == "GET":
         with open("last_req.json") as js:
-            a = json.load(js)
-        return jsonify(a)
+            last_req = json.load(js)
+        with open("unresponsed_queries.json") as js:
+            unresponsed_queries = json.load(js)
+
+        if request.args['urq']:
+            return jsonify(unresponsed_queries)
+
+        if request.args['del']:
+            os.remove('unresponsed_queries.json')
+
+        return jsonify(last_req)
 
 if __name__ == '__main__':
    app.run(debug = True)
