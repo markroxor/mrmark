@@ -13,9 +13,13 @@ def process_update():
     if request.method == "POST":
         print('update', request)
         json_request = request.get_json()
-
-        with open("last_req.json", 'w') as js:
-            js.write(json.dumps(json_request))
+        
+        if json_request['queryResult']['action'] == 'input.unknown':
+            with open("unresponsed_queries.json", 'a') as js:
+                js.write(json.dumps(json_request))
+        else:
+            with open("last_req.json", 'w') as js:
+                js.write(json.dumps(json_request))
 
         print(json_request)
         return "ok got your post!", 200
