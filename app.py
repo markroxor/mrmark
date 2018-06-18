@@ -35,7 +35,8 @@ def process_update():
             return jsonify(unresponsed_queries)
 
         if request.args['del']:
-            os.remove('unresponsed_queries.json')
+            with open("unresponsed_queries.json", 'w') as js:
+                js.write(json.dumps({}))
 
         return jsonify(last_req)
 
