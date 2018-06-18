@@ -14,7 +14,7 @@ def process_message(update):
     data["text"] = "I can hear you!"
     # r = requests.post(get_url("sendMessage"), data=data)
 
-@app.route("/", methods=["POST"])
+@app.route("/", methods=["POST", "GET"])
 def process_update():
     if request.method == "POST":
         print('update', request)
@@ -22,6 +22,10 @@ def process_update():
         print(update)
         if "message" in update:
             process_message(update)
-        return "ok!", 200
+        return "ok got your post!", 200
+
+    if request.method == "GET":
+        return "ok got it!", 200
+
 if __name__ == '__main__':
    app.run(debug = True)
