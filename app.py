@@ -28,22 +28,23 @@ def process_update():
     if request.method == "GET":
         with open("last_req.json") as js:
             last_req = json.load(js)
-        with open("unresponsed_queries.json") as js:
-            unresponsed_queries = json.load(js)
+        # with open("unresponsed_queries.json") as js:
+        #     unresponsed_queries = json.load(js)
 
-        print(request.args['del'])
+        # print(request.args['del'])
 
-        if request.args['del'] is True:
-            print('deleting unresponsed_queries')
-            with open("unresponsed_queries.json", 'w') as js:
-                js.write(json.dumps({}))
-                
-        if request.args['urq'] is True:
-            print('returning unresponsed_queries content')
-            return jsonify(unresponsed_queries)
+        # if request.args['del'] == 'True':
+        #     print('deleting unresponsed_queries')
+        #     with open("unresponsed_queries.json", 'w') as js:
+        #         js.write(json.dumps({}))
+        
+        # print(request.args['urq'])
+        # if request.args['urq'] == 'True':
+        #     print('returning unresponsed_queries content')
+        #     return unresponsed_queries
 
 
-
+        # print("return")
         return jsonify(last_req)
 
 if __name__ == '__main__':
