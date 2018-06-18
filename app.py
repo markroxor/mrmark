@@ -1,5 +1,6 @@
 import requests
-from flask import Flask, request
+from flask import Flask, request, jsonify
+import json
 
 app = Flask(__name__)
 
@@ -18,14 +19,19 @@ def process_message(update):
 def process_update():
     if request.method == "POST":
         print('update', request)
-        update = request.get_json()
-        print(update)
-        if "message" in update:
-            process_message(update)
-        return "ok got your post!", 200
+        json_request = request.get_json()
 
+        with open("last_req.json", 'w') as js:
+            js.write(json.dumps(json_request))
+
+        print(json_request)
+        return "ok got your post!", 200
+        
     if request.method == "GET":
-        return "ok got it!", 200
+        # return "ok got it!", 200
+        with open("last_req.json") as js:
+            a = json.load(js)
+        return jsonify(a)
 
 if __name__ == '__main__':
    app.run(debug = True)
