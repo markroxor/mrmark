@@ -4,16 +4,9 @@ import json
 
 app = Flask(__name__)
 
-bot_token = '5'
-
-def get_url(method):
-  return "https://api.telegram.org/bot{}/{}".format(bot_token,method)
-
-def process_message(update):
+def post_request(json_request):
     data = {}
-    data["chat_id"] = update["message"]["from"]["id"]
-    data["text"] = "I can hear you!"
-    # r = requests.post(get_url("sendMessage"), data=data)
+    # r = requests.post('url, data=data)
 
 @app.route("/", methods=["POST", "GET"])
 def process_update():
@@ -28,7 +21,6 @@ def process_update():
         return "ok got your post!", 200
         
     if request.method == "GET":
-        # return "ok got it!", 200
         with open("last_req.json") as js:
             a = json.load(js)
         return jsonify(a)
