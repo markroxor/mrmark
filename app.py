@@ -17,6 +17,7 @@ def process_message(update):
 @app.route("/", methods=["POST"])
 def process_update():
     if request.method == "POST":
+        print('update', request)
         update = request.get_json()
         print(update)
         if "message" in update:
