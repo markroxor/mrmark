@@ -151,7 +151,7 @@ def process_config():
             if con:
                 con.rollback()
         
-            print ('Error %s' % e)   
+            print ('Error %s' % e)    
         
         finally:   
             if con:

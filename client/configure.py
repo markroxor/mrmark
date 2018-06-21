@@ -2,8 +2,8 @@ import os, uuid, json
 import requests
 
 config_file = os.path.expanduser('~/.mrmark_config.json')
-# server_url = 'https://mrmark.herokuapp.com/'
-server_url = 'http://localhost:5000'
+server_url = 'https://mrmark.herokuapp.com/'
+# server_url = 'http://localhost:5000'
 
 if os.path.exists(config_file):
     with open(config_file, 'r') as f:
@@ -17,7 +17,7 @@ else:
     # the UUID serves as a unique auth token to send requests.
 
     print("Created a configuration file for you at {}".format(config_file))
-    config['auth_token'] = str(uuid.uuid4()).upper()[:4]
+    config['auth_token'] = str(uuid.uuid4()).lower()[:4]
 
     with open(config_file, 'w') as f:
         json.dump(config, f)
