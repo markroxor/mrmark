@@ -53,6 +53,7 @@ def process_config():
         username = conf['email_id'].split('@gmail.com')[0] 
         confs[username] = conf
 
+        print(confs, config_file)
         with open(config_file, 'w') as f:
             json.dump(confs, f)
         
