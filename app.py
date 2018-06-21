@@ -1,51 +1,64 @@
 import requests
 from flask import Flask, request, jsonify
 import json
-import os
+import time
+
+username = 'mrmohitrathoremr'
+config_file = 'conf.json'
 
 app = Flask(__name__)
 
-def post_request(json_request):
-    data = {}
-    # r = requests.post('url, data=data)
-
 @app.route("/", methods=["POST", "GET"])
-def process_update():
-    if request.method == "POST":
-        print('update', request)
-        json_request = request.get_json()
-        
-        if json_request['queryResult']['action'] == 'input.unknown':
-            with open("unresponsed_queries.json", 'a') as js:
-                js.write(json.dumps(json_request))
-        else:
-            with open("last_req.json", 'w') as js:
-                js.write(json.dumps(json_request))
+def process_df_api():
 
+    # get dialog-flow's POST request and send a POST request to the client side.
+    if request.method == "POST":
+        r = "GOT a DF API POST request."
+        json_request = request.get_json()
         print(json_request)
-        return "ok got your post!", 200
+
+        with open(config_file) as f:
+            confs = json.load(f)
+
+        auth_token = confs[username]['auth_token']
+
+        if json_request['queryResult']['action'] == 'input.unknown':
+            print("here")
+            with open("unresponsed_queries.txt", 'a') as js:
+                js.write(json.dumps(json_request['queryResult']['queryText']) + '\n')
+        else:
+            url = 'https://'+auth_token+'.serveo.net'
+            print("\n")
+            headers = {'content-type': 'application/json'}
+            print(url)
+            print(json.dumps(json_request))
+            r1 = requests.post(url=url, data=json.dumps(json_request), headers=headers)
+            print("response", r1.text)
+
+        return r, 200
         
     if request.method == "GET":
-        with open("last_req.json") as js:
-            last_req = json.load(js)
-        # with open("unresponsed_queries.json") as js:
-        #     unresponsed_queries = json.load(js)
+        return "Heroku GOT a request", 200
 
-        # print(request.args['del'])
+@app.route("/config", methods=["POST"])
+def process_config():
 
-        # if request.args['del'] == 'True':
-        #     print('deleting unresponsed_queries')
-        #     with open("unresponsed_queries.json", 'w') as js:
-        #         js.write(json.dumps({}))
+    # saves the POSTED user configuration in conf folder
+    if request.method == "POST":
+        print(request, "request")
+        conf = request.get_json()
+        print(conf)
+
+        with open(config_file) as f:
+            confs = json.load(f)
+
+        username = conf['email_id'].split('@gmail.com')[0] 
+        confs[username] = conf
+
+        with open(config_file, 'w') as f:
+            json.dump(confs, f)
         
-        # print(request.args['urq'])
-        # if request.args['urq'] == 'True':
-        #     print('returning unresponsed_queries content')
-        #     return unresponsed_queries
-
-
-        # print("return")
-        return jsonify(last_req)
+        return "saved the new configuration", 200
 
 if __name__ == '__main__':
-   app.run(debug = True)
+    app.run(debug = True)
