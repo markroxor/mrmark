@@ -23,17 +23,15 @@ def process_df_api():
         auth_token = confs[username]['auth_token']
 
         if json_request['queryResult']['action'] == 'input.unknown':
-            print("here")
             with open("unresponsed_queries.txt", 'a') as js:
                 js.write(json.dumps(json_request['queryResult']['queryText']) + '\n')
         else:
             url = 'https://'+auth_token+'.serveo.net'
-            print("\n")
             headers = {'content-type': 'application/json'}
-            print(url)
-            print(json.dumps(json_request))
-            r1 = requests.post(url=url, data=json.dumps(json_request), headers=headers)
-            print("response", r1.text)
+
+            resp = requests.post(url=url, data=json.dumps(json_request), headers=headers)
+            print("response", resp.text)
+            r = resp.text
 
         return r, 200
         
