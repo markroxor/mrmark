@@ -18,7 +18,7 @@ else:
 
     print("Created a configuration file for you at {}".format(config_file))
 
-config['auth_token'] = str(uuid.uuid4()).upper()[:8]
+config['auth_token'] = str(uuid.uuid4()).upper()[:4]
 
 with open(config_file, 'w') as f:
     json.dump(config, f)
