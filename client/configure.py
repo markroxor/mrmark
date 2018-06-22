@@ -1,5 +1,6 @@
 import os, uuid, json
 import requests
+import logging
 
 config_file = os.path.expanduser('~/.mrmark_config.json')
 server_url = 'https://mrmark.herokuapp.com/'
@@ -17,7 +18,7 @@ else:
     # the UUID serves as a unique auth token to send requests.
 
     print("Created a configuration file for you at {}".format(config_file))
-    config['auth_key'] = str(uuid.uuid4()).lower()[:4]
+    config['auth_tok'] = str(uuid.uuid4()).lower()[:4]
 
     with open(config_file, 'w') as f:
         json.dump(config, f)
@@ -26,5 +27,5 @@ else:
     # sends the configuration to the server so that the communication can begin.
     requests.post(url=server_url+'/config', data=json.dumps(config), headers=headers)
 
-print(json.dumps(config))
+print(json.dumps(config), flush=True)
 
