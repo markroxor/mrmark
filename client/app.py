@@ -13,27 +13,39 @@ def take_action(data):
     
     print(query)
     print(parameters)
+
+    with open("key_mapping.json") as km:
+        key_map = json.load(km)
+
     if action == 'open_app':
         print(parameters['app'])
         pyautogui.press('apps')
         time.sleep(1)
         pyautogui.typewrite(parameters['app'])
         pyautogui.press('enter')
+
     elif action == 'keystroke':
         keystroke = str(parameters['keystroke']).lower()
-        print(keystroke.lower())
+        print(keystroke)
 
         if len(keystroke.split(' ')) > 1:
             pyautogui.hotkey(*keystroke.split(' '))
         else:
-            if keystroke == 'play' or keystroke == 'pause':
-                pyautogui.press('f7')
-            elif keystroke == 'volumeup':
-                pyautogui.press('f10')
-            elif keystroke == 'volumedown':
-                pyautogui.press('f9')
-            else:
-                pyautogui.press(keystroke)
+            if keystroke in key_map:
+                keystroke = key_map[keystroke]
+            
+            print("Pressing {}".format(keystroke))
+            pyautogui.press(keystroke)
+
+            # if keystroke == 'play' or keystroke == 'pause':
+            #     pyautogui.press('f7')
+            # elif keystroke == 'volumeup':
+            #     pyautogui.press('f10')
+            # elif keystroke == 'volumedown':
+            #     pyautogui.press('f9')
+            # else:
+            #     pyautogui.press(keystroke)
+
     elif action == 'type':
         text = str(parameters['any']).lower()
         pyautogui.typewrite(text)

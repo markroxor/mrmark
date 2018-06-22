@@ -17,13 +17,14 @@ else:
     # the UUID serves as a unique auth token to send requests.
 
     print("Created a configuration file for you at {}".format(config_file))
-    config['auth_token'] = str(uuid.uuid4()).lower()[:4]
+    config['auth_key'] = str(uuid.uuid4()).lower()[:4]
 
     with open(config_file, 'w') as f:
         json.dump(config, f)
 
+    headers = {'content-type': 'application/json'}
+    # sends the configuration to the server so that the communication can begin.
+    requests.post(url=server_url+'/config', data=json.dumps(config), headers=headers)
+
 print(json.dumps(config))
 
-headers = {'content-type': 'application/json'}
-# sends the configuration to the server so that the communication can begin.
-requests.post(url=server_url+'/config', data=json.dumps(config), headers=headers)
