@@ -23,12 +23,13 @@ def database_do(action='None', userid='None', auth_tok='None', mail_id='None', q
                 if row == None:
                     break
                 auth_tok = str(row[0])
-                print("your auth_tok is " + auth_tok)
+                print("Fetching auth_tok... {} ".format(auth_tok))
 
         elif action == 'update_uid':
             cur.execute("SELECT * FROM "+ config_table +" WHERE auth_tok = '" + str(auth_tok) + "'")
             cur.execute("UPDATE "+ config_table +" SET userid='" + userid + "' WHERE auth_tok='" + str(auth_tok) + "'")
             con.commit()
+            print("Linked {} with {}".format(auth_tok, userid))
 
         elif action == 'copy_init_config':
             cur.execute("select exists(select * from information_schema.tables where table_name=%s)", (config_table,))
@@ -41,6 +42,7 @@ def database_do(action='None', userid='None', auth_tok='None', mail_id='None', q
                 
             cur.execute("INSERT INTO "+ config_table +" VALUES('" + str(auth_tok) + "','" +  mail_id + "','None')")
             con.commit()
+            print("Inserted {} and {} in {}".format(auth_tok, mail_id, config_table))
 
         elif action == 'unresponsed_query':
             cur.execute("select exists(select * from information_schema.tables where table_name=%s)", (config_table,))
@@ -51,6 +53,7 @@ def database_do(action='None', userid='None', auth_tok='None', mail_id='None', q
                 
             cur.execute("INSERT INTO " + query_table + " VALUES('" + query + "')")
             con.commit()
+            print("Inserted {} in {}".format(query, query_table))
     
     except psycopg2.DatabaseError as e:
         if con:
@@ -73,7 +76,6 @@ def process_df_api():
     if request.method == "POST":
         r = "GOT a DF API POST request."
         json_request = request.get_json()
-        print(json_request)
 
         if json_request['queryResult']['action'] == 'input.unknown':
             database_do(action='unresponsed_query', query=json_request['queryResult']['queryText'])
@@ -84,7 +86,6 @@ def process_df_api():
 
             if auth_tok != '':
                 database_do(action='update_uid', auth_tok=auth_tok, userid=userid)
-                print("Linked {} with {}".format(auth_tok, userid))
             else:
                 print("Wont link empty keys")
 
@@ -95,7 +96,11 @@ def process_df_api():
             url = 'https://' + auth_tok + '.serveo.net'
             headers = {'content-type': 'application/json'}
 
-            print("Sending to {} payload {}".format(url, json_request))
+            query = json_request['queryResult']['queryText']
+            parameters = json_request['queryResult']['parameters']
+            action = json_request['queryResult']['action']
+
+            print("Sending query {} with params {} and action {} to {}".format(url, query, parameters, action))
             resp = requests.post(url=url, data=json.dumps(json_request), headers=headers)
             r = resp.text
 

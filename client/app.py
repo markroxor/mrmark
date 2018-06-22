@@ -18,14 +18,14 @@ def take_action(data):
     with open("key_mapping.json") as km:
         key_map = json.load(km)
 
-    if action == 'open_app':
+    if action == 'open_app' and parameters['app'] != '':
         print(parameters['app'])
         pyautogui.press('apps')
         time.sleep(1)
         pyautogui.typewrite(parameters['app'])
         pyautogui.press('enter')
 
-    elif action == 'keystroke':
+    elif action == 'keystroke' and parameters['keystroke'] != '':
         keystroke = str(parameters['keystroke']).lower()
         print(keystroke)
 
@@ -38,7 +38,7 @@ def take_action(data):
             print("Pressing {}".format(keystroke))
             pyautogui.press(keystroke)
 
-    elif action == 'type':
+    elif action == 'type' and parameters['any'] != '':
         text = str(parameters['any']).lower()
         pyautogui.typewrite(text)
 
