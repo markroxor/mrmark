@@ -1,0 +1,8 @@
+{
+    "play": "f7",
+    "pause": "f7",
+    "next": "f8",
+    "previous": "f6",
+    "volumeup": "f10",
+    "volumedown": "f9"
+}
