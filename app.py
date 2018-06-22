@@ -5,7 +5,7 @@ import time, os
 import psycopg2
 
 app = Flask(__name__)
-config_table = 'user_config'
+config_table = 'config'
 query_table = 'unresponsed_queries'
 
 
@@ -26,8 +26,8 @@ def database_do(action='None', userid='None', auth_tok='None', mail_id='None', q
                 print("your auth_tok is " + auth_tok)
 
         elif action == 'update_uid':
-            cur.execute("SELECT * FROM "+ config_table +" WHERE auth_tok = '" + auth_tok + "'")
-            cur.execute("UPDATE "+ config_table +" SET userid='" + userid + "' WHERE auth_tok='" + auth_tok + "'")
+            cur.execute("SELECT * FROM "+ config_table +" WHERE auth_tok = '" + str(int(auth_tok)) + "'")
+            cur.execute("UPDATE "+ config_table +" SET userid='" + userid + "' WHERE auth_tok='" + str(int(auth_tok)) + "'")
             con.commit()
 
         elif action == 'copy_init_config':
@@ -35,11 +35,11 @@ def database_do(action='None', userid='None', auth_tok='None', mail_id='None', q
 
             if cur.fetchone()[0] is False:
                 print("created new table named {}".format(config_table))
-                cur.execute("CREATE TABLE "+ config_table +"(auth_tok VARCHAR(4) PRIMARY KEY, mail_id VARCHAR(50), userid VARCHAR(200))")
+                cur.execute("CREATE TABLE "+ config_table +"(auth_tok INT PRIMARY KEY, mail_id VARCHAR(50), userid VARCHAR(200))")
 
             cur.execute("DELETE FROM "+ config_table +" WHERE mail_id='" + mail_id + "'") 
                 
-            cur.execute("INSERT INTO "+ config_table +" VALUES('" + auth_tok + "','" +  mail_id + "','None')")
+            cur.execute("INSERT INTO "+ config_table +" VALUES('" + str(int(auth_tok)) + "','" +  mail_id + "','None')")
             con.commit()
 
         elif action == 'unresponsed_query':
@@ -63,7 +63,7 @@ def database_do(action='None', userid='None', auth_tok='None', mail_id='None', q
             con.close()
             
             if action == 'get_auth':
-                return auth_tok
+                return str(int(auth_tok))
 
 
 @app.route("/", methods=["POST", "GET"])

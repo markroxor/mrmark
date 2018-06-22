@@ -38,15 +38,6 @@ def take_action(data):
             print("Pressing {}".format(keystroke))
             pyautogui.press(keystroke)
 
-            # if keystroke == 'play' or keystroke == 'pause':
-            #     pyautogui.press('f7')
-            # elif keystroke == 'volumeup':
-            #     pyautogui.press('f10')
-            # elif keystroke == 'volumedown':
-            #     pyautogui.press('f9')
-            # else:
-            #     pyautogui.press(keystroke)
-
     elif action == 'type':
         text = str(parameters['any']).lower()
         pyautogui.typewrite(text)
