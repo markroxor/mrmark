@@ -26,8 +26,8 @@ def database_do(action='None', userid='None', auth_tok='None', mail_id='None', q
                 print("your auth_tok is " + auth_tok)
 
         elif action == 'update_uid':
-            cur.execute("SELECT * FROM "+ config_table +" WHERE auth_tok = '" + str(int(auth_tok)) + "'")
-            cur.execute("UPDATE "+ config_table +" SET userid='" + userid + "' WHERE auth_tok='" + str(int(auth_tok)) + "'")
+            cur.execute("SELECT * FROM "+ config_table +" WHERE auth_tok = '" + str(auth_tok) + "'")
+            cur.execute("UPDATE "+ config_table +" SET userid='" + userid + "' WHERE auth_tok='" + str(auth_tok) + "'")
             con.commit()
 
         elif action == 'copy_init_config':
@@ -39,7 +39,7 @@ def database_do(action='None', userid='None', auth_tok='None', mail_id='None', q
 
             cur.execute("DELETE FROM "+ config_table +" WHERE mail_id='" + mail_id + "'") 
                 
-            cur.execute("INSERT INTO "+ config_table +" VALUES('" + str(int(auth_tok)) + "','" +  mail_id + "','None')")
+            cur.execute("INSERT INTO "+ config_table +" VALUES('" + str(auth_tok) + "','" +  mail_id + "','None')")
             con.commit()
 
         elif action == 'unresponsed_query':
@@ -63,7 +63,7 @@ def database_do(action='None', userid='None', auth_tok='None', mail_id='None', q
             con.close()
             
             if action == 'get_auth':
-                return str(int(auth_tok))
+                return str(auth_tok)
 
 
 @app.route("/", methods=["POST", "GET"])
