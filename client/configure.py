@@ -3,8 +3,8 @@ import requests
 from random import randint
 
 config_file = os.path.expanduser('~/.mrmark_config.json')
-server_url = 'https://mrmark.herokuapp.com/'
-# server_url = 'http://localhost:5000'
+# server_url = 'https://mrmark.herokuapp.com/'
+server_url = 'http://localhost:5000'
 
 if os.path.exists(config_file):
     with open(config_file, 'r') as f:

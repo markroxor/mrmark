@@ -79,11 +79,14 @@ def process_df_api():
             database_do(action='unresponsed_query', query=json_request['queryResult']['queryText'])
 
         elif json_request['queryResult']['action'] == 'authenticate':
-            auth_tok = json_request['queryResult']['parameters']['auth_tok']
+            auth_tok = str(json_request['queryResult']['parameters']['auth_tok'])
             userid = json_request['originalDetectIntentRequest']['payload']['user']['userId']
 
-            database_do(action='update_uid', auth_tok=auth_tok, userid=userid)
-            print("Linked {} with {}".format(auth_tok, userid))
+            if auth_tok != '':
+                database_do(action='update_uid', auth_tok=auth_tok, userid=userid)
+                print("Linked {} with {}".format(auth_tok, userid))
+            else:
+                print("Wont link empty keys")
 
         else:
             userid = json_request['originalDetectIntentRequest']['payload']['user']['userId']
@@ -92,7 +95,7 @@ def process_df_api():
             url = 'https://' + auth_tok + '.serveo.net'
             headers = {'content-type': 'application/json'}
 
-            print("Sending payload {} to {}".format(url, json_request))
+            print("Sending to {} payload {}".format(url, json_request))
             resp = requests.post(url=url, data=json.dumps(json_request), headers=headers)
             r = resp.text
 
