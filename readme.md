@@ -21,15 +21,10 @@ While in the `client/` directory execute.
 2. Install client side dependencies using -
 `pip install requirements.txt`
 3. Run the app using -  
-`python app.py`
-4. To expose the server to the internet - open a new terminal give the executable permissions -  
- `chmod +x port_forwarding.sh`
-5. Run the port forwarding shell script   
- `./port_forwarding.sh`.
+`supervisord`
 This will return a authentication token - `auth_tok`.   
-6. Open _Google Assistant_ and invoke _Mr. Mark_ as `talk to Mr. Mark`.    
-7. Say - `Authenticate me` to Mr. Mark and share this authentication token.   
-8. Have fun.
+4. Open _Google Assistant_ and invoke _Mr. Mark_ as `talk to Mr. Mark`.    
+5. Say - `Authenticate me` to Mr. Mark and share this authentication token.   
 
 
 
@@ -42,9 +37,8 @@ This will return a authentication token - `auth_tok`.
 │   ├── `Dockerfile` - Configuration for creating docker images. (EXPERIMENTAL)  
 │   ├── `key_mapping.json` - Key mapping as per user's preference. User can edit it according to their local configuration.  
 │   ├── `port_forwarding.sh` - Script for exposing the localhost to the internet.  
-│   ├── `readme.md` - Usage instructions.  
-│   ├── `requirements.txt` - Python dependencies.  
-│   └── `supervisord.conf` - The configuration for servers with supervisord. (EXPERIMENTAL)  
+│   ├── `requirements.txt` - Client side dependencies.  
+│   └── `supervisord.conf` - The configuration for servers with supervisord.
   
 ├── `Procfile` - Heroku configuration.  
 ├── `readme.md` - Usage instructions.  
