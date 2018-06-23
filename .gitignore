@@ -1,2 +1,11 @@
+# virtual env
 env
+
+# IDE
 .vscode
+
+# logs
+/*/*.log
+
+# supervisor residue
+/*/*.pid
