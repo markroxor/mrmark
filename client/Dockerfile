@@ -1,7 +1,8 @@
 FROM python:3
-RUN apt-get update
-RUN apt-get install -y supervisor
-RUN apt-get install -y python3-xlib python3-tk xvfb
+LABEL maintainer="Mohit Rathore"
+
+RUN apt-get update && \
+  apt-get install -y supervisor python3-xlib python3-tk xvfb x11-xserver-utils
 RUN \
   Xvfb :1 -screen 0 1366x768x16 &> xvfb.log && \
   export DISPLAY=:1.0 && \
@@ -11,8 +12,8 @@ RUN \
   pip3 install pyautogui
 
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
 COPY . ./
 RUN pip install -r requirements.txt
-CMD ls
-CMD ["/usr/bin/supervisord"]
+CMD xhost + && python app.py
 

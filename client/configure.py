@@ -12,11 +12,7 @@ if os.path.exists(config_file):
 else:
     config = {}
 
-    print("Let's get you started.")
-    config['email_id'] = str(input("Please enter the mail address associated with the Google assistant.\n"))
-
     # the UUID serves as a unique auth token to send requests.
-
     print("Created a configuration file for you at {}".format(config_file))
     config['auth_tok'] = str(randint(100000, 999999))
 
@@ -25,7 +21,6 @@ else:
 
     headers = {'content-type': 'application/json'}
     # sends the configuration to the server so that the communication can begin.
+
+    print("sending {} to {}".format(config, server_url))
     requests.post(url=server_url+'/config', data=json.dumps(config), headers=headers)
-
-print(json.dumps(config), flush=True)
-

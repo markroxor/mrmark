@@ -9,7 +9,7 @@ config_table = 'config'
 query_table = 'unresponsed_queries'
 
 
-def database_do(action='None', userid='None', auth_tok='None', mail_id='None', query='None'):
+def database_do(action='None', userid='None', auth_tok='None', query='None'):
     try:
         con = psycopg2.connect(os.environ["DATABASE_URL"], sslmode='require')   
         cur = con.cursor()
@@ -36,13 +36,12 @@ def database_do(action='None', userid='None', auth_tok='None', mail_id='None', q
 
             if cur.fetchone()[0] is False:
                 print("created new table named {}".format(config_table))
-                cur.execute("CREATE TABLE "+ config_table +"(auth_tok INT PRIMARY KEY, mail_id VARCHAR(50), userid VARCHAR(200))")
+                cur.execute("CREATE TABLE "+ config_table +"(auth_tok INT PRIMARY KEY, userid VARCHAR(200))")
 
-            cur.execute("DELETE FROM "+ config_table +" WHERE mail_id='" + mail_id + "'") 
-                
-            cur.execute("INSERT INTO "+ config_table +" VALUES('" + str(auth_tok) + "','" +  mail_id + "','None')")
+            cur.execute("DELETE FROM "+ config_table +" WHERE auth_tok='" + str(auth_tok) + "'")
+            cur.execute("INSERT INTO "+ config_table +" VALUES('" + str(auth_tok) + "','" +  userid + "')")
             con.commit()
-            print("Inserted {} and {} in {}".format(auth_tok, mail_id, config_table))
+            print("Inserted {} in {}".format(auth_tok, config_table))
 
         elif action == 'unresponsed_query':
             cur.execute("select exists(select * from information_schema.tables where table_name=%s)", (config_table,))
@@ -118,7 +117,7 @@ def process_config():
         config = request.get_json()
 
         print(config)
-        database_do(action='copy_init_config', auth_tok=config['auth_tok'], mail_id=config['email_id'])
+        database_do(action='copy_init_config', auth_tok=config['auth_tok'])
 
         return "saved the new configuration", 200
 

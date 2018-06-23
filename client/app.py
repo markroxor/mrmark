@@ -1,9 +1,11 @@
 import requests
 from flask import Flask, request, jsonify
 import json
-import pyautogui
 import time
-import sys
+import os
+
+os.environ['DISPLAY']=':1.0'
+import pyautogui
 
 app = Flask(__name__)
 
