@@ -49,8 +49,7 @@ def take_action(data):
 def process_update():
     if request.method == "POST":
         json_request = request.get_json()
-        print(json_request)
-        print(json_request['session'])#['userId'])
+
         if json_request['queryResult']['action'] == 'input.unknown':
             with open("unresponsed_queries.txt", 'a') as js:
                 js.write(json.dumps(json_request['queryResult']['queryText']) + '\n')

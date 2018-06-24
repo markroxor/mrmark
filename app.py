@@ -67,13 +67,33 @@ def database_do(action='None', userid='None', auth_tok='None', query='None'):
             if action == 'get_auth':
                 return str(auth_tok)
 
-
+def return_text(text):
+    response = {'payload': {
+                'google': {
+                'expectUserResponse': 'true',
+                'richResponse': {
+                    'items': [
+                    {
+                        'simpleResponse': {
+                        'textToSpeech': text
+                        }
+                    }
+                    ]
+                }
+                }
+            }
+            }
+    return str(response)
+                    
 @app.route("/", methods=["POST", "GET"])
 def process_df_api():
-
     # get dialog-flow's POST request and send a POST request to the client side.
+
+    if request.authorization["username"] != os.environ['post_usr'] or request.authorization["password"] != os.environ['post_pwd']:
+        return "authentication failure", 401
+
     if request.method == "POST":
-        r = "GOT a DF API POST request."
+        default_POST_response = "GOT a DF API POST request."
         json_request = request.get_json()
 
         if json_request['queryResult']['action'] == 'input.unknown':
@@ -85,9 +105,11 @@ def process_df_api():
 
             if auth_tok != '':
                 database_do(action='update_uid', auth_tok=auth_tok, userid=userid)
+                return return_text("I have added the authentication token {}".format(" ".join(list(str(auth_tok))))), 200
+
             else:
                 print("Wont link empty keys")
-
+                return default_POST_response, 200
 
         else:
             userid = json_request['originalDetectIntentRequest']['payload']['user']['userId']
@@ -101,10 +123,10 @@ def process_df_api():
             action = json_request['queryResult']['action']
 
             print("Sending query {} with params {} and action {} to {}".format(url, query, parameters, action))
-            resp = requests.post(url=url, data=json.dumps(json_request), headers=headers)
-            r = resp.text
+            requests.post(url=url, data=json.dumps(json_request), headers=headers)
+            
 
-        return r, 200
+        return default_POST_response, 200
         
     if request.method == "GET":
         return "Heroku GOT a request", 200
