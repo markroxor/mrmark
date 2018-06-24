@@ -9,3 +9,7 @@ env
 
 # supervisor residue
 /*/*.pid
+
+# cache
+__pycache__
+/*/.pyc
