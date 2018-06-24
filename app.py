@@ -44,7 +44,7 @@ def database_do(action='None', userid='None', auth_tok='None', query='None'):
             print("Inserted {} in {}".format(auth_tok, config_table))
 
         elif action == 'unresponsed_query':
-            cur.execute("select exists(select * from information_schema.tables where table_name=%s)", (config_table,))
+            cur.execute("select exists(select * from information_schema.tables where table_name=%s)", (query_table,))
 
             if cur.fetchone()[0] is False:
                 print("created new table named {}".format(query_table))
@@ -87,6 +87,7 @@ def process_df_api():
                 database_do(action='update_uid', auth_tok=auth_tok, userid=userid)
             else:
                 print("Wont link empty keys")
+
 
         else:
             userid = json_request['originalDetectIntentRequest']['payload']['user']['userId']
