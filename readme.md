@@ -16,6 +16,14 @@ It can do anything you can do using your keystrokes.
 
 
 ### Usage - 
+It is recommended to use a virtual environment before installing dependecies to avoid any conflicts.  
+
+Install dependencies -   
+`sudo apt install jq supervisor`
+
+if you are using `python3` install `xlib` via    
+`pip install python3-xlib`
+
 1. Sign up as a alpha tester - using this [link.](https://assistant.google.com/services/a/uid/000000eac507a9f1)   
 While in the `client/` directory execute.
 2. Install client side dependencies using -
@@ -43,3 +51,4 @@ This will return a authentication token - `auth_tok`.
 ├── `Procfile` - Heroku configuration.  
 ├── `readme.md` - Usage instructions.  
 └── `requirements.txt` - Server side dependencies.  
+
