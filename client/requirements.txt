@@ -13,7 +13,6 @@ PyScreeze==0.1.14
 PyTweening==1.0.3
 requests==2.19.1
 six==1.11.0
-supervisor==4.0.0.dev0
 urllib3==1.23
 Werkzeug==0.14.1
 xlib==0.21
