@@ -4,7 +4,7 @@ import json
 import time
 import os
 
-os.environ['DISPLAY']=':1.0'
+os.environ['DISPLAY']=':0'
 import pyautogui
 
 app = Flask(__name__)
