@@ -33,6 +33,11 @@ def take_action(data):
 
         if len(keystroke.split(' ')) > 1:
             pyautogui.hotkey(*keystroke.split(' '))
+        elif keystroke == 'sleep' or keystroke == 'suspend':
+            pyautogui.hotkey("alt",  "f2")
+            time.sleep(1)
+            pyautogui.typewrite("systemctl suspend")
+            pyautogui.press("enter")
         else:
             if keystroke in key_map:
                 keystroke = key_map[keystroke]
