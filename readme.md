@@ -10,7 +10,7 @@ Current functionalities include -
 - [x] Launching/closing any app.
 - [x] Complete media support.
 - [x] Vocal typing.
-- [ ] Remote sleep.
+- [x] Remote sleep.
 
 It can do anything you can do using your keystrokes.
 
