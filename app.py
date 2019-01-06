@@ -99,6 +99,7 @@ def process_df_api():
 
         default_POST_response = "GOT a DF API POST request."
         json_request = request.get_json()
+        print(json_request)
 
         if json_request['queryResult']['action'] == 'input.unknown':
             database_do(action='unresponsed_query', query=json_request['queryResult']['queryText'])
@@ -128,10 +129,12 @@ def process_df_api():
 
             print("Sending query {} with params {} and action {} to {}".format(url, query, parameters, action))
             requests.post(url=url, data=json.dumps(json_request), headers=headers)
-            
+            print('Successfully handled request.')
+            return return_text('success'), 200
 
-        return default_POST_response, 200
-        
+        print ('Default POST RESPONSE')
+        return return_text(default_POST_response), 200
+
 
 @app.route("/config", methods=["POST"])
 def process_config():
