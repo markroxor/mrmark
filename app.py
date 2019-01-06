@@ -84,15 +84,19 @@ def return_text(text):
             }
             }
     return str(response)
-                    
+
+
 @app.route("/", methods=["POST", "GET"])
 def process_df_api():
     # get dialog-flow's POST request and send a POST request to the client side.
+    if request.method == "GET":
+        return "Heroku GOT a request", 200
 
-    if request.authorization["username"] != os.environ['post_usr'] or request.authorization["password"] != os.environ['post_pwd']:
-        return "authentication failure", 401
 
     if request.method == "POST":
+        if request.authorization["username"] != os.environ['post_usr'] or request.authorization["password"] != os.environ['post_pwd']:
+            return "authentication failure", 401
+
         default_POST_response = "GOT a DF API POST request."
         json_request = request.get_json()
 
@@ -128,8 +132,6 @@ def process_df_api():
 
         return default_POST_response, 200
         
-    if request.method == "GET":
-        return "Heroku GOT a request", 200
 
 @app.route("/config", methods=["POST"])
 def process_config():
