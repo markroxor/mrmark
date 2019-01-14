@@ -10,17 +10,28 @@ query_table = 'unresponsed_queries'
 
 
 def database_do(action='None', userid='None', auth_tok='None', query='None'):
+
     try:
-        con = psycopg2.connect(os.environ["DATABASE_URL"], sslmode='require')   
+        con = psycopg2.connect(os.environ["DATABASE_URL"], sslmode='require')
         cur = con.cursor()
+
+        # force copy_init_config when table not present.
+        cur.execute("select exists(select * from information_schema.tables where table_name=%s)", (config_table,))
+
+        if cur.fetchone()[0] is False:
+            print('Table not present, forcing create new table..')
+            action = 'copy_init_config'
+
+        print('Invoking', action, 'for userid', userid, 'with auth_token', auth_tok)
 
         if action == 'get_auth':
             cur.execute("SELECT * FROM "+ config_table +" WHERE userid = '" + userid + "'")
-        
+
             while True:
                 row = cur.fetchone()
-        
+
                 if row == None:
+                    print('auth_tok is', auth_tok)
                     break
                 auth_tok = str(row[0])
                 print("Fetching auth_tok... {} ".format(auth_tok))
@@ -49,21 +60,21 @@ def database_do(action='None', userid='None', auth_tok='None', query='None'):
             if cur.fetchone()[0] is False:
                 print("created new table named {}".format(query_table))
                 cur.execute("CREATE TABLE " + query_table + "(query VARCHAR(500) PRIMARY KEY)")
-                
+
             cur.execute("INSERT INTO " + query_table + " VALUES('" + query + "')")
             con.commit()
             print("Inserted {} in {}".format(query, query_table))
-    
+
     except psycopg2.DatabaseError as e:
         if con:
             con.rollback()
-    
-        print ('Error %s' % e  )  
-    
-    finally:   
+
+        print ('Error %s' % e  )
+
+    finally:
         if con:
             con.close()
-            
+
             if action == 'get_auth':
                 return str(auth_tok)
 
@@ -98,8 +109,12 @@ def process_df_api():
 
         default_POST_response = "GOT a DF API POST request."
         json_request = request.get_json()
+        print('\n', json_request, '\n')
 
-        if json_request['queryResult']['action'] == 'input.unknown':
+        if 'action' not in json_request['queryResult']:
+            return return_text('Request not understood. Try again..'), 200
+
+        elif json_request['queryResult']['action'] == 'input.unknown':
             database_do(action='unresponsed_query', query=json_request['queryResult']['queryText'])
 
         elif json_request['queryResult']['action'] == 'authenticate':
@@ -117,6 +132,8 @@ def process_df_api():
             userid = json_request['originalDetectIntentRequest']['payload']['user']['userId']
             auth_tok = database_do(action='get_auth', userid=userid)
 
+            if auth_tok is 'None':
+                return return_text('You are not authenticated. Try saying authenticate me.'), 200
             url = 'https://' + auth_tok + '.serveo.net'
             headers = {'content-type': 'application/json'}
 
