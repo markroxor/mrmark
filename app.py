@@ -141,7 +141,7 @@ def process_df_api():
             parameters = json_request['queryResult']['parameters']
             action = json_request['queryResult']['action']
 
-            print("Sending query {} with params {} and action {} to {}".format(url, query, parameters, action))
+            print("Sending query {} with params {} and action {} to {}".format(query, parameters, action, url))
             requests.post(url=url, data=json.dumps(json_request), headers=headers)
 
         return return_text(json_request['queryResult']['fulfillmentText']), 200

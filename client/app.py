@@ -13,13 +13,25 @@ def take_action(data):
     query = data['queryResult']['queryText']
     parameters = data['queryResult']['parameters']
     action = data['queryResult']['action']
-    
+
     print(query)
     print(parameters)
 
     with open("key_mapping.json") as km:
         key_map = json.load(km)
 
+    if action == 'home_automation' and parameters['state'] != '' and parameters['switch'][0] != '':
+        import RPi.GPIO as GPIO
+        switch = int(parameters['switch'][0])
+
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setwarnings(False)
+        GPIO.setup(switch, GPIO.OUT)
+
+        if parameters['state'] == 'off':
+              GPIO.output(switch,GPIO.HIGH)
+        else:
+              GPIO.output(switch,GPIO.LOW)
     if action == 'open_app' and parameters['app'] != '':
         print(parameters['app'])
         pyautogui.press('apps')
@@ -41,7 +53,7 @@ def take_action(data):
         else:
             if keystroke in key_map:
                 keystroke = key_map[keystroke]
-            
+
             print("Pressing {}".format(keystroke))
             pyautogui.press(keystroke)
 
@@ -60,9 +72,9 @@ def process_update():
                 js.write(json.dumps(json_request['queryResult']['queryText']) + '\n')
         else:
             take_action(json_request)
-   
+
         return "ok got your post!", 200
-        
+
     if request.method == "GET":
         return "ok GOT it", 200
 
