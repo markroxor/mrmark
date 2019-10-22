@@ -13,7 +13,7 @@ PyScreeze==0.1.14
 PyTweening==1.0.3
 requests==2.19.1
 six==1.11.0
-urllib3==1.23
+urllib3==1.24.2
 Werkzeug==0.15.3
 xlib==0.21
 PyAutoGUI==0.9.36
